@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import LinkedInEmbed from "./LinkedInEmbed";
+import { useLinkedIn } from "@/hooks/useLinkedIn";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 
@@ -9,40 +11,30 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const posts = [
-  {
-    id: 1,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7478117931621494785?collapsed=1",
-  },
-  {
-    id: 2,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:share:7410379078807064577?collapsed=1",
-  },
-  {
-    id: 3,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:share:7408187565691875328?collapsed=1",
-  },
-  {
-    id: 4,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:share:7445521979878760448?collapsed=1",
-  },
-  {
-    id: 5,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7459869035514527744",
-  },
-  {
-    id: 6,
-    url: "https://www.linkedin.com/embed/feed/update/urn:li:share:7478296866778988544?collapsed=1",
-  },
-];
-
 export default function LinkedInFeed() {
+  const { posts, loading, error } = useLinkedIn();
+
   const [activeIndex, setActiveIndex] = useState(0);
+
+  if (loading) {
+    return (
+      <div className="py-10 text-center text-gray-500">
+        Loading LinkedIn posts...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-10 text-center text-red-500">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
-      {/* Post counter */}
-      <p className="mb-4 text-center text-sm text-gray-400">
+      <p className="mb-4 text-center text-sm text-gray-500">
         {activeIndex + 1} / {posts.length}
       </p>
 
@@ -61,8 +53,11 @@ export default function LinkedInFeed() {
       >
         {posts.map((post) => (
           <SwiperSlide key={post.id}>
-            <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-gray-200 transition-shadow hover:shadow-lg">
-              <LinkedInEmbed url={post.url} height={500} />
+            <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-gray-200 hover:shadow-lg transition-shadow">
+              <LinkedInEmbed
+                url={post.url}
+                height={500}
+              />
             </div>
           </SwiperSlide>
         ))}

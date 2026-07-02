@@ -3,3 +3,5 @@ export interface LinkedInPost {
   url: string;
   postUrl?: string;
 }
+
+export type LinkedInPosts = LinkedInPost[];
